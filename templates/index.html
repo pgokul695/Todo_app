@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Theme Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- 1. Root Variables for Dark Theme --- */
+        :root {
+            /* Dark Background Palette */
+            --bg-color: #1a1a2e; /* Deep dark blue/purple */
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #0f0a1c 100%); /* Subtle dark gradient */
+            
+            /* Accent Colors */
+            --primary-color: #7987ff; /* Lighter Blue for accents */
+            --secondary-color: #b388ff; /* Lighter Violet for events */
+            
+            /* Card & Text Colors */
+            --card-bg: rgba(255, 255, 255, 0.08); /* Transparent card background */
+            --dark-bg: rgba(255, 255, 255, 0.03); /* Extremely subtle clock background */
+            --text-color: #e0e0e0; /* Light text for main content */
+            --light-text: #ffffff; /* Pure white for clock */
+
+            /* Priority Colors (Adapted for Dark BG) */
+            --high-color: #ff6b6b;
+            --normal-color: #7987ff;
+            --low-color: #63ff8c;
+            
+            /* Shadows & Radius */
+            --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.5); /* Stronger shadow on dark mode */
+            --shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.8);
+            --radius-xl: 25px;
+            --radius-lg: 15px;
+        }
+
+        /* --- 2. Base & Container --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 40px;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 1280px;
+            width: 100%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        /* --- 3. Clock Section (Glassmorphic) --- */
+        .clock-section {
+            grid-column: 1 / -1;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            background: var(--dark-bg);
+            border-radius: var(--radius-xl);
+            padding: 60px 20px;
+            box-shadow: var(--shadow-lg);
+            color: var(--light-text);
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Lighter glass border */
+        }
+
+        .time {
+            font-size: clamp(4rem, 15vw, 10rem);
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 5px;
+            text-shadow: 0 0 15px rgba(121, 135, 255, 0.5); /* Light glow on time */
+        }
+
+        .date {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        /* --- 4. Content Grid & Cards --- */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            gap: 30px;
+        }
+
+        .tasks-section, .events-section {
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            padding: 30px;
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .tasks-header, .events-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .tasks-header h2, .events-header h2 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        /* --- 5. Stats (Monochromatic) --- */
+        .stats {
+            display: flex;
+            gap: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: rgba(121, 135, 255, 0.1); /* Primary color accent background */
+            border-radius: var(--radius-lg);
+            padding: 8px 15px;
+            color: var(--text-color);
+        }
+
+        .stat-badge {
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 800;
+        }
+        
+        /* Dark Theme Specific Stat Colors */
+        .stat-badge#total-count { background: rgba(121, 135, 255, 0.3); color: var(--normal-color); }
+        .stat-badge#pending-count { background: rgba(255, 204, 0, 0.3); color: #ffcc00; }
+        .stat-badge#done-count { background: rgba(99, 255, 140, 0.3); color: var(--low-color); }
+
+
+        /* --- 6. Input Group & Button --- */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: nowrap;
+        }
+
+        .task-input, .priority-select {
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: var(--radius-lg);
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: inherit;
+            background: rgba(0, 0, 0, 0.2); /* Dark input background */
+            color: var(--text-color);
+        }
+        
+        .priority-select option {
+            background: var(--bg-color); /* Darker background for dropdown options */
+        }
+
+        .task-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(121, 135, 255, 0.2);
+        }
+
+        .add-btn {
+            padding: 15px 25px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(121, 135, 255, 0.4);
+        }
+
+        /* --- 7. Task List Items --- */
+        .tasks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.05); /* Very light transparent background */
+            border-radius: var(--radius-lg);
+            border-left: 6px solid var(--normal-color);
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.3s;
+            color: var(--text-color);
+        }
+
+        .task-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .task-item.high { border-left-color: var(--high-color); }
+        .task-item.normal { border-left-color: var(--normal-color); }
+        .task-item.low { border-left-color: var(--low-color); }
+
+        .task-item.completed { 
+            opacity: 0.6; 
+            border-left-color: #4a4a4a; 
+        }
+
+        .task-checkbox {
+            min-width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: #7f8c8d;
+        }
+
+        .priority-badge {
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        /* Dark Theme Specific Priority Badge Colors */
+        .priority-badge.high { background: rgba(255, 107, 107, 0.2); color: var(--high-color); }
+        .priority-badge.normal { background: rgba(121, 135, 255, 0.2); color: var(--normal-color); }
+        .priority-badge.low { background: rgba(99, 255, 140, 0.2); color: var(--low-color); }
+
+        .delete-btn {
+            padding: 6px 10px;
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--high-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .delete-btn:hover { background: rgba(255, 107, 107, 0.3); }
+
+        /* --- 8. Events List --- */
+        .events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .event-item {
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            border-left: 4px solid var(--secondary-color);
+            box-shadow: var(--shadow-subtle);
+            transition: transform 0.2s;
+            color: var(--text-color);
+        }
+
+        .event-item:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .event-item h4 {
+            font-size: 1.05rem;
+            color: var(--light-text);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .event-item p {
+            font-size: 0.85rem;
+            color: #b0b0b0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .event-time {
+            font-weight: 700;
+            color: var(--secondary-color);
+            flex-shrink: 0;
+            margin-left: 10px;
+        }
+
+        /* --- 9. Empty State --- */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #7f8c8d;
+        }
+
+        .empty-state-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            opacity: 0.4;
+        }
+
+        /* --- 10. Responsive Design --- */
+        @media (max-width: 900px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .input-group {
+                flex-wrap: wrap;
+            }
+
+            .task-input {
+                min-width: 100%;
+            }
+
+            .priority-select, .add-btn {
+                width: calc(50% - 5px);
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px;
+            }
+            .clock-section {
+                padding: 40px 15px;
+            }
+            .priority-select, .add-btn {
+                width: 100%;
+            }
+            .stats {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="clock-section">
+            <div class="time" id="time">00:00:00</div>
+            <div class="date" id="date">Loading...</div>
+        </div>
+
+        <div class="content-grid">
+            <div class="tasks-section">
+                <div class="tasks-header">
+                    <h2>📋 My Tasks</h2>
+                    <div class="stats">
+                        <div class="stat">
+                            <span>Total:</span>
+                            <span class="stat-badge" id="total-count">0</span>
+                        </div>
+                        <div class="stat">
+                            <span>Pending:</span>
+                            <span class="stat-badge" id="pending-count">0</span>
+                        </div>
+                        <div class="stat">
+                            <span>Done:</span>
+                            <span class="stat-badge" id="done-count">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" class="task-input" id="task-input" placeholder="What needs to be done?" />
+                    <select class="priority-select" id="priority-select">
+                        <option value="normal">Normal</option>
+                        <option value="high">High Priority</option>
+                        <option value="low">Low Priority</option>
+                    </select>
+                    <button class="add-btn" onclick="addTask()">Add Task</button>
+                </div>
+
+                <div class="tasks-list" id="tasks-list">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✨</div>
+                        <p>No tasks yet. Add one to get started!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="events-section">
+                <div class="events-header">
+                    <h2>🗓️ Upcoming Events</h2>
+                    <span class="stat-badge" style="background: rgba(179, 136, 255, 0.2); color: var(--secondary-color);" id="events-count">0 Events</span>
+                </div>
+                
+                <div class="events-list" id="events-list">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🧘</div>
+                        <p>Loading events...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Clock Functions ---
+        function updateClock() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+            const date = now.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            document.getElementById('time').textContent = time;
+            document.getElementById('date').textContent = date;
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // --- Utility Functions ---
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // --- Task Functions ---
+        function updateStats(total, pending, done) {
+            document.getElementById('total-count').textContent = total;
+            document.getElementById('pending-count').textContent = pending;
+            document.getElementById('done-count').textContent = done;
+        }
+
+        function renderTasks(tasks) {
+            const tasksList = document.getElementById('tasks-list');
+            
+            if (tasks.length === 0) {
+                tasksList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✨</div>
+                        <p>No tasks yet. Add one to get started!</p>
+                    </div>
+                `;
+                updateStats(0, 0, 0);
+                return;
+            }
+
+            const sortedTasks = tasks.sort((a, b) => {
+                if (a.completed !== b.completed) return a.completed ? 1 : -1;
+                const priorityOrder = { high: 0, normal: 1, low: 2 };
+                return priorityOrder[a.priority] - priorityOrder[b.priority];
+            });
+
+            tasksList.innerHTML = sortedTasks.map(task => `
+                <div class="task-item ${task.priority} ${task.completed ? 'completed' : ''}">
+                    <input type="checkbox" class="task-checkbox" 
+                               ${task.completed ? 'checked' : ''} 
+                               onchange="toggleTask(${task.id}, this.checked)">
+                    <span class="task-text">${escapeHtml(task.text)}</span>
+                    <span class="priority-badge ${task.priority}">${task.priority.toUpperCase()}</span>
+                    <button class="delete-btn" onclick="deleteTask(${task.id})">Delete</button>
+                </div>
+            `).join('');
+
+            const total = tasks.length;
+            const done = tasks.filter(t => t.completed).length;
+            const pending = total - done;
+            updateStats(total, pending, done);
+        }
+
+        async function loadTasks() {
+            try {
+                const response = await fetch('/api/notifications');
+                const tasks = await response.json();
+                renderTasks(tasks);
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                renderTasks([]); 
+            }
+        }
+
+        async function addTask() {
+            const input = document.getElementById('task-input');
+            const priority = document.getElementById('priority-select').value;
+            const text = input.value.trim();
+
+            if (!text) {
+                alert('Please enter a task');
+                return;
+            }
+
+            try {
+                await fetch('/api/notifications', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, priority })
+                });
+
+                input.value = '';
+                document.getElementById('priority-select').value = 'normal';
+                loadTasks();
+            } catch (error) {
+                console.error('Error adding task:', error);
+            }
+        }
+
+        async function toggleTask(id, completed) {
+            try {
+                await fetch(`/api/notifications/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ completed })
+                });
+
+                loadTasks();
+            } catch (error) {
+                console.error('Error updating task:', error);
+            }
+        }
+
+        async function deleteTask(id) {
+            try {
+                await fetch(`/api/notifications/${id}`, {
+                    method: 'DELETE'
+                });
+
+                loadTasks();
+            } catch (error) {
+                console.error('Error deleting task:', error);
+            }
+        }
+
+        document.getElementById('task-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTask();
+        });
+
+
+        // --- Calendar Events Functions ---
+        function formatEventTime(isoString) {
+            if (isoString === 'All Day') return 'All Day';
+            
+            const date = new Date(isoString); 
+            
+            if (isoString.length <= 10) { 
+                 return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            }
+            
+            return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+        }
+
+        function renderEvents(events) {
+            const eventsList = document.getElementById('events-list');
+            const eventsCountBadge = document.getElementById('events-count');
+
+            if (events.length === 0) {
+                eventsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🧘</div>
+                        <p>No upcoming events in the next 24 hours.</p>
+                    </div>
+                `;
+                eventsCountBadge.textContent = '0 Events';
+                return;
+            }
+
+            eventsList.innerHTML = events.map(event => `
+                <div class="event-item">
+                    <h4>${escapeHtml(event.summary)}</h4>
+                    <p>
+                        <span>${escapeHtml(event.location)}</span>
+                        <span class="event-time">${formatEventTime(event.start_time)} - ${event.end_time === 'All Day' ? 'All Day' : formatEventTime(event.end_time)}</span>
+                    </p>
+                </div>
+            `).join('');
+            
+            eventsCountBadge.textContent = `${events.length} Events`;
+        }
+        
+        async function loadEvents() {
+            try {
+                const response = await fetch('/api/calendar_events');
+                if (!response.ok) {
+                    throw new Error('Failed to load events from the backend.');
+                }
+                const events = await response.json();
+                renderEvents(events);
+            } catch (error) {
+                console.error('Error loading calendar events:', error);
+                document.getElementById('events-list').innerHTML = `
+                    <div class="empty-state" style="color: var(--high-color);">
+                        <div class="empty-state-icon">🚨</div>
+                        <p>Could not connect to Google Calendar. Check server console for authorization steps.</p>
+                    </div>
+                `;
+                document.getElementById('events-count').textContent = 'Error';
+            }
+        }
+
+        // Initial load
+        loadTasks();
+        loadEvents();
+    </script>
+</body>
+</html>

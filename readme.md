@@ -82,7 +82,7 @@ my-dashboard/
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/dark-theme-dashboard.git
+   git clone https://github.com/pgokul695/Todo_app
    cd dark-theme-dashboard
    ```
 
@@ -208,10 +208,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 📧 Contact
 
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter) - email@example.com
+Gokul P- pgokul695@gmail.com
 
-Project Link: [https://github.com/yourusername/dark-theme-dashboard](https://github.com/yourusername/dark-theme-dashboard)
-
+Project Link: [https://github.com/pgokul695/Todo_app](https://github.com/pgokul695/Todo_app)]
 ---
 
 ## 🙏 Acknowledgments
